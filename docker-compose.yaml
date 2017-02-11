@@ -1,0 +1,30 @@
+version: '2'
+services:
+  nginx:
+    build: ./docker/nginx
+    environment:
+      LARAVEL_PUBLIC: '/var/www/laravel/public'
+    volumes:
+      - ./:/var/www
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - php-fpm
+  php-fpm:
+    build: ./docker/php
+    environment:
+      DB_PORT: 5432
+      DB_HOST: postgres
+    volumes:
+      - ./:/var/www
+    links:
+      - postgres
+  postgres:
+    build: ./docker/postgres
+    environment:
+      POSTGRES_DB: homestead
+      POSTGRES_USER: homestead
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
